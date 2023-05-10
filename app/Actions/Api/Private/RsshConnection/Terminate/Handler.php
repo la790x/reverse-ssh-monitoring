@@ -21,7 +21,7 @@ class Handler
             $rsshConnection = app('request')->rss_connection;
             RsshLog::create([
                 'log' => $e->getMessage(),
-                'rss_connection_id' => $rsshConnection->id
+                'rssh_connection_id' => $rsshConnection->id
             ]);
             throw new \Exception($e->getMessage());
         }
