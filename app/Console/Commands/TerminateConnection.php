@@ -14,7 +14,7 @@ class TerminateConnection extends Command
      *
      * @var string
      */
-    protected $signature = 'app:terminate-connection {deviceId} {port}';
+    protected $signature = 'app:terminate-connection {deviceid} {port}';
 
     /**
      * The console command description.
@@ -29,9 +29,8 @@ class TerminateConnection extends Command
     public function handle()
     {
         $port = (int) $this->argument('port');
-        $deviceId = (int) $this->argument('deviceId');
+        $deviceId = (int) $this->argument('deviceid');
         $rsshConnection = RsshConnection::where('device_id', $deviceId)->first();
-
         try {
             $this->execute($deviceId, $port);
             $this->updateStatusConnection($deviceId);
