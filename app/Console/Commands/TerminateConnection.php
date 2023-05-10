@@ -49,13 +49,13 @@ class TerminateConnection extends Command
     public function terminate($deviceId, $port)
     {
         $rsshConnection = RsshConnection::where('device_id', $deviceId)->first();
-        dd($rsshConnection);
-        exec("lsof -i :$rsshConnection->server_port -t", $outputLsof, $resultLsof);
+        $port = (int) $rsshConnection->server_port;
+        exec("lsof -i :$port -t", $outputLsof, $resultLsof);
 
         if ($resultLsof === 0) {
             if (is_array($outputLsof)) {
                 if (count($outputLsof) > 0) {
-                    $pid = $outputLsof[0];
+                    $pid = (int) $outputLsof[0];
                     exec("kill -9 $pid", $outputKill, $resultKill);
                     if ($resultKill !== 0)
                         return "Failed to terminate the process reverse ssh.";
