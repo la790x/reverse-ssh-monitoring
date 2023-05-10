@@ -27,6 +27,7 @@ class TerminateConnection
         $commandLsofPort = "lsof -i :{$rsshConnection->server_port} -t";
         exec("lsof -i :3387 -t", $outputLsof, $resultLsof);
 
+        dump($resultLsof);
         if ($resultLsof === 0) {
             if (is_array($outputLsof)) {
                 if (count($outputLsof) > 0) {
