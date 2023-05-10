@@ -32,7 +32,7 @@ class TerminateConnection extends Command
         $deviceId = (int) $this->argument('deviceid');
         $rsshConnection = RsshConnection::where('device_id', $deviceId)->first();
         try {
-            $this->execute($deviceId, $port);
+            $this->terminate($deviceId, $port);
             $this->updateStatusConnection($deviceId);
             $this->createLog($deviceId);
         } catch (\Exception $e) {
@@ -43,7 +43,7 @@ class TerminateConnection extends Command
         }
     }
 
-    public function execute($deviceId, $port)
+    public function terminate($deviceId, $port)
     {
         $rsshConnection = RsshConnection::where('device_id', $deviceId)->first();
         exec("lsof -i :$rsshConnection->server_port -t", $outputLsof, $resultLsof);
