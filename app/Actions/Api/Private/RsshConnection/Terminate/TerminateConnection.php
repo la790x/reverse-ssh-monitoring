@@ -3,6 +3,7 @@
 namespace App\Actions\Api\Private\RsshConnection\Terminate;
 
 use Illuminate\Http\Request;
+use App\Models\RsshConnection;
 use Illuminate\Support\Facades\Artisan;
 
 class TerminateConnection
