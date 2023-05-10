@@ -2,8 +2,10 @@
 
 namespace App\Actions\Api\Private\RsshConnection\Terminate;
 
+use App\Models\RsshLog;
 use Illuminate\Http\Request;
 use App\Models\RsshConnection;
+use App\Models\ConnectionStatus;
 
 class TerminateConnection
 {
@@ -11,8 +13,17 @@ class TerminateConnection
     {
         $rsshConnection = RsshConnection::where('device_id', $request->device_id)->first();
         $request->request->add([
-            'rss_connection_id' => $rsshConnection->id
+            'rss_connection' => $rsshConnection->id
         ]);
+
+        self::execute($request);
+        self::updateStatusConnection($request);
+        self::createLog($request);
+    }
+
+    public static function execute($request)
+    {
+        $rsshConnection = $request->rss_connection;
         exec("lsof -i :$rsshConnection->server_port -t", $outputLsof, $resultLsof);
 
         if ($resultLsof === 0) {
@@ -21,13 +32,29 @@ class TerminateConnection
                     $pid = $outputLsof[0];
                     exec("kill -9 $pid", $outputKill, $resultKill);
                     if ($resultKill !== 0)
-                        throw new \Exception("Failed to terminate the process.");
+                        throw new \Exception("Failed to terminate the process reverse ssh.");
 
                     return true;
                 }
             }
         }
 
-        throw new \Exception("Port $port is not in use.");
+        throw new \Exception("Port $rsshConnection->server_port is not in use.");
+    }
+
+    public function updateStatusConnection($request)
+    {
+        RsshConnection::where('device_id', $request->device_id)->update([
+            'connection_status_id' => ConnectionStatus::where('name', 'terminate')->first()->id
+        ]);
+    }
+
+    public static function createLog($request)
+    {
+        $rsshConnection = $request->rss_connection;
+        RsshLog::create([
+            'log' => 'Success to terminate the process reverse ssh.',
+            'rssh_connection_id' => $rsshConnection->id
+        ]);
     }
 }
