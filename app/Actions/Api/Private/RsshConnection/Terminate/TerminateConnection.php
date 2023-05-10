@@ -10,6 +10,7 @@ class TerminateConnection
 {
     public static function handle(Request $request)
     {
+        dd($request->device_id);
         $rsshConnection = RsshConnection::where('device_id', $request->device_id)->first();
         Artisan::call('app:terminate-connection', [
             'deviceId' => $rsshConnection->device_id,
