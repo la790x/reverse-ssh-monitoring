@@ -52,6 +52,7 @@ class TerminateConnection extends Command
         $port = (int) $rsshConnection->server_port;
         exec("lsof -i :$port -t", $outputLsof, $resultLsof);
 
+        dd($port, $outputLsof, $resultLsof);
         if ($resultLsof === 0) {
             if (is_array($outputLsof)) {
                 if (count($outputLsof) > 0) {
