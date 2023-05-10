@@ -13,7 +13,7 @@ class TerminateConnection
     {
         $rsshConnection = RsshConnection::where('device_id', $request->device_id)->first();
         $request->request->add([
-            'rss_connection' => $rsshConnection->id
+            'rss_connection' => $rsshConnection
         ]);
 
         self::execute($request);
