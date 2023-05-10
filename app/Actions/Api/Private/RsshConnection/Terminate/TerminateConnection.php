@@ -24,7 +24,8 @@ class TerminateConnection
     public static function execute($request)
     {
         $rsshConnection = app('request')->rss_connection;
-        dd($rsshConnection);
+        $commandLsofPort = "lsof -i :$rsshConnection->server_port -t";
+        dd($commandLsofPort);
         exec("lsof -i :$rsshConnection->server_port -t", $outputLsof, $resultLsof);
 
         dump($resultLsof, $outputLsof);
