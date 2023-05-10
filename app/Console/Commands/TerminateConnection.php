@@ -33,9 +33,9 @@ class TerminateConnection extends Command
         $rsshConnection = RsshConnection::where('device_id', $deviceId)->first();
 
         try {
-            self::execute($deviceId, $port);
-            self::updateStatusConnection($deviceId);
-            self::createLog($deviceId);
+            $this->execute($deviceId, $port);
+            $this->updateStatusConnection($deviceId);
+            $this->createLog($deviceId);
         } catch (\Exception $e) {
             RsshLog::create([
                 'log' => $e->getMessage(),
@@ -44,7 +44,7 @@ class TerminateConnection extends Command
         }
     }
 
-    public static function execute($deviceId, $port)
+    public function execute($deviceId, $port)
     {
         $rsshConnection = RsshConnection::where('device_id', $deviceId)->first();
         exec("lsof -i :$port -t", $outputLsof, $resultLsof);
@@ -64,14 +64,14 @@ class TerminateConnection extends Command
         return "Port $rsshConnection->server_port is not in use.";
     }
 
-    public static function updateStatusConnection($deviceId)
+    public function updateStatusConnection($deviceId)
     {
         RsshConnection::where('device_id', $deviceId)->update([
             'connection_status_id' => ConnectionStatus::where('name', 'terminate')->first()->id
         ]);
     }
 
-    public static function createLog($deviceId)
+    public function createLog($deviceId)
     {
         $rsshConnection = RsshConnection::where('device_id', $deviceId)->first();
         RsshLog::create([
