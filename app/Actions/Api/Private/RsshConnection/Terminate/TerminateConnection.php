@@ -12,6 +12,7 @@ class TerminateConnection
     public static function handle(Request $request)
     {
         $rsshConnection = RsshConnection::where('device_id', $request->device_id)->first();
+        dd($rsshConnection);
         $request->request->add([
             'rss_connection' => $rsshConnection
         ]);
