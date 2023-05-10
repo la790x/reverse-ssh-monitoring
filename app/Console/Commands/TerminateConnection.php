@@ -49,9 +49,9 @@ class TerminateConnection extends Command
     public function terminate($deviceId, $port)
     {
         $rsshConnection = RsshConnection::where('device_id', $deviceId)->first();
+        dd($rsshConnection);
         exec("lsof -i :$rsshConnection->server_port -t", $outputLsof, $resultLsof);
 
-        dd($outputLsof, $resultLsof);
         if ($resultLsof === 0) {
             if (is_array($outputLsof)) {
                 if (count($outputLsof) > 0) {
