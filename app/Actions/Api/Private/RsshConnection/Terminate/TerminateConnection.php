@@ -11,7 +11,7 @@ class TerminateConnection
     public static function handle(Request $request)
     {
         $rsshConnection = RsshConnection::where('device_id', $request->device_id)->first();
-        Artisan::call('your:command', [
+        Artisan::call('app:terminate-connection', [
             'deviceId' => $rsshConnection->device_id,
             'port' => $rsshConnection->server_port
         ]);
