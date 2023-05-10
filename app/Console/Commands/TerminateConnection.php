@@ -32,7 +32,10 @@ class TerminateConnection extends Command
         $deviceId = (int) $this->argument('deviceid');
         $rsshConnection = RsshConnection::where('device_id', $deviceId)->first();
         try {
-            $this->terminate($deviceId, $port);
+            $result = $this->terminate($deviceId, $port);
+            if ('ok' != $result)
+                throw new \Exception($result);
+
             $this->updateStatusConnection($deviceId);
             $this->createLog($deviceId);
         } catch (\Exception $e) {
