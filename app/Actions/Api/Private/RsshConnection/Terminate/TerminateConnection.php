@@ -24,13 +24,14 @@ class TerminateConnection
     public static function execute($request)
     {
         $rsshConnection = app('request')->rss_connection;
-        dd($rsshConnection, 1234);
         exec("lsof -i :$rsshConnection->server_port -t", $outputLsof, $resultLsof);
 
+        dump($resultLsof, $outputLsof);
         if ($resultLsof === 0) {
             if (is_array($outputLsof)) {
                 if (count($outputLsof) > 0) {
                     $pid = $outputLsof[0];
+                    dump($pid);
                     exec("kill -9 $pid", $outputKill, $resultKill);
                     if ($resultKill !== 0)
                         throw new \Exception("Failed to terminate the process reverse ssh.");
