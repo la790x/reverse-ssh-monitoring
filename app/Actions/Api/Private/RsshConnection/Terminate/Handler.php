@@ -19,7 +19,6 @@ class Handler
             return response()->api(true, 200, [], 'Successfully terminated connection', '', '');
         } catch (\Exception $e) {
             $rsshConnection = app('request')->rss_connection;
-            dump($rsshConnection);
             RsshLog::create([
                 'log' => $e->getMessage(),
                 'rss_connection_id' => $rsshConnection->id

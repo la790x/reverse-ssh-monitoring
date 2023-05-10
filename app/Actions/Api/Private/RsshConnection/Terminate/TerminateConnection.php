@@ -23,7 +23,7 @@ class TerminateConnection
 
     public static function execute($request)
     {
-        $rsshConnection = $request->rss_connection;
+        $rsshConnection = app('request')->rss_connection;
         exec("lsof -i :$rsshConnection->server_port -t", $outputLsof, $resultLsof);
 
         if ($resultLsof === 0) {
@@ -51,7 +51,7 @@ class TerminateConnection
 
     public static function createLog($request)
     {
-        $rsshConnection = $request->rss_connection;
+        $rsshConnection = app('request')->rss_connection;
         RsshLog::create([
             'log' => 'Success to terminate the process reverse ssh.',
             'rssh_connection_id' => $rsshConnection->id
