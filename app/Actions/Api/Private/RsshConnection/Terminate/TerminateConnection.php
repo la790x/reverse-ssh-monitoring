@@ -12,7 +12,6 @@ class TerminateConnection
     public static function handle(Request $request)
     {
         $rsshConnection = RsshConnection::where('device_id', $request->device_id)->first();
-        dd($rsshConnection);
         $request->request->add([
             'rss_connection' => $rsshConnection
         ]);
@@ -25,6 +24,7 @@ class TerminateConnection
     public static function execute($request)
     {
         $rsshConnection = app('request')->rss_connection;
+        dd($rsshConnection, 1234);
         exec("lsof -i :$rsshConnection->server_port -t", $outputLsof, $resultLsof);
 
         if ($resultLsof === 0) {
