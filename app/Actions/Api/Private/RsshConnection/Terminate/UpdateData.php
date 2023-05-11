@@ -11,8 +11,8 @@ class UpdateData
 {
     public static function handle(Request $request)
     {
-        $rsshConnection = RsshConnection::where('device_id', $this->deviceId)->first();
-        RsshConnection::where('device_id', $this->deviceId)->update([
+        $rsshConnection = RsshConnection::where('device_id', $request->device_id)->first();
+        RsshConnection::where('device_id', $request->device_id)->update([
             'connection_status_id' => ConnectionStatus::where('name', 'request terminate')->first()->id
         ]);
         RsshLog::create([
