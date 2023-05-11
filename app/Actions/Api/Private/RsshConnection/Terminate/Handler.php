@@ -2,9 +2,8 @@
 
 namespace App\Actions\Api\Private\RsshConnection\Terminate;
 
-use App\Models\RsshLog;
 use Illuminate\Http\Request;
-use App\Models\RsshConnection;
+use App\Jobs\TerminateConnection;
 
 class Handler
 {
@@ -15,8 +14,8 @@ class Handler
                 'device_id' => $id
             ]);
             ValidateRequest::handle($request);
-            TerminateConnection::handle($request);
-            return response()->api(true, 200, [], 'Successfully terminated connection', '', '');
+            dispatch(new TerminateConnection($id));
+            return response()->api(true, 200, [], 'Successfully send a disconnect connection request', '', '');
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
