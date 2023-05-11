@@ -57,7 +57,7 @@ class TerminateConnection implements ShouldQueue
             $outputLsofPort = $lsofPortCommand->getOutput();
             Log::info($outputLsofPort);
         } else {
-            throw new \Exception('error terminate port ' . $port . ' ' . $command->getError());
+            throw new \Exception('error terminate port ' . $port . ' ' . $lsofPortCommand->getError());
         }
     }
 
