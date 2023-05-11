@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Log;
 use App\Models\RsshLog;
 use Illuminate\Bus\Queueable;
 use App\Models\RsshConnection;
@@ -52,6 +53,8 @@ class TerminateConnection implements ShouldQueue
         $port = (int) $rsshConnection->server_port;
         exec("lsof -i :{$port} -t", $outputLsof, $resultLsof);
 
+        Log::info($resultLsof);
+        Log::info($outputLsof);
         if ($resultLsof == 0) {
             if (is_array($outputLsof)) {
                 if (count($outputLsof) > 0) {
