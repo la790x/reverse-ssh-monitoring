@@ -53,15 +53,13 @@ class TerminateConnection implements ShouldQueue
         exec("lsof -i :{$port} -t", $outputLsof, $resultLsof);
 
         if ($resultLsof === 0) {
-            if (is_array($outputLsof)) {
-                if (count($outputLsof) > 0) {
-                    $pid = (int) $outputLsof[0];
-                    exec("kill -9 {$pid}", $outputKill, $resultKill);
-                    if ($resultKill !== 0)
-                        throw new \Exception("Failed to terminate the process reverse ssh.");
+            if (is_numeric($outputLsof)) {
+                $pid = (int) $outputLsof;
+                exec("kill -9 {$pid}", $outputKill, $resultKill);
+                if ($resultKill !== 0)
+                    throw new \Exception("Failed to terminate the process reverse ssh.");
 
-                    return true;
-                }
+                return true;
             }
         }
 
