@@ -7,6 +7,7 @@ use App\Models\RsshLog;
 use Illuminate\Bus\Queueable;
 use App\Models\RsshConnection;
 use App\Models\ConnectionStatus;
+use mikehaertl\shellcommand\Command;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -51,24 +52,13 @@ class TerminateConnection implements ShouldQueue
     {
         $rsshConnection = RsshConnection::where('device_id', $this->deviceId)->first();
         $port = (int) $rsshConnection->server_port;
-        exec("lsof -i :$port -t", $outputLsof, $resultLsof);
-
-        Log::info($resultLsof);
-        Log::info($outputLsof);
-        if ($resultLsof == 0) {
-            if (is_array($outputLsof)) {
-                if (count($outputLsof) > 0) {
-                    $pid = (int) $outputLsof[0];
-                    exec("kill -9 $pid", $outputKill, $resultKill);
-                    if ($resultKill !== 0)
-                        throw new \Exception("Failed to terminate the process reverse ssh.");
-
-                    return true;
-                }
-            }
+        $lsofPortCommand = new Command("lsof -i :$port -t");
+        if ($lsofPortCommand->execute()) {
+            $outputLsofPort = $lsofPortCommand->getOutput();
+            Log::info($outputLsofPort);
+        } else {
+            throw new \Exception('error terminate port ' . $port . ' ' . $command->getError());
         }
-
-        throw new \Exception("Port $rsshConnection->server_port is not in use.");
     }
 
     public function updateStatusConnection()
