@@ -51,7 +51,7 @@ class TerminateConnection implements ShouldQueue
     {
         $rsshConnection = RsshConnection::where('device_id', $this->deviceId)->first();
         $port = (int) $rsshConnection->server_port;
-        exec("lsof -i :{$port} -t", $outputLsof, $resultLsof);
+        exec("lsof -i :$port -t", $outputLsof, $resultLsof);
 
         Log::info($resultLsof);
         Log::info($outputLsof);
@@ -59,7 +59,7 @@ class TerminateConnection implements ShouldQueue
             if (is_array($outputLsof)) {
                 if (count($outputLsof) > 0) {
                     $pid = (int) $outputLsof[0];
-                    exec("kill -9 {$pid}", $outputKill, $resultKill);
+                    exec("kill -9 $pid", $outputKill, $resultKill);
                     if ($resultKill !== 0)
                         throw new \Exception("Failed to terminate the process reverse ssh.");
 
