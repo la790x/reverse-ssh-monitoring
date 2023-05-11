@@ -14,6 +14,7 @@ class Handler
                 'device_id' => $id
             ]);
             ValidateRequest::handle($request);
+            UpdateData::handle($request);
             dispatch(new TerminateConnection($id));
             return response()->api(true, 200, [], 'Successfully send a disconnect connection request', '', '');
         } catch (\Exception $e) {
