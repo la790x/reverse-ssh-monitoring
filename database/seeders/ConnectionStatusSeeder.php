@@ -13,7 +13,7 @@ class ConnectionStatusSeeder extends Seeder
      */
     public function run(): void
     {
-        $names = ['waiting', 'connected', 'terminated', 'request terminate'];
+        $names = ['disconnect', 'connected', 'request terminate', 'pid server terminated', 'plink terminated'];
 
         foreach ($names as $value) {
             ConnectionStatus::create([
